@@ -7,6 +7,9 @@
 <body>
 <h2>Välkommen!</h2>
 <p th:text="'Du är inloggad som: ' + ${#httpServletRequest.getCookie('userEmail')?.value}"></p>
-<a href="/login">Logga ut</a>
+
+<form action="/logout" method="post">
+    <button type="submit">Logga ut</button>
+</form>
 </body>
 </html>

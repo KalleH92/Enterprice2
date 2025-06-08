@@ -3,9 +3,11 @@ package com.kh.ep_projekt.controller;
 import com.kh.ep_projekt.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 
 @Controller
 @RequestMapping("/users")
@@ -24,7 +26,7 @@ public class UserPageController {
         return "login"; // pekar på templates/login.html
     }
 
-    @PostMapping("/register")
+    @PostMapping("/register-form")
     public String register(@RequestParam String name,
                            @RequestParam String email,
                            @RequestParam String password,
@@ -43,15 +45,20 @@ public class UserPageController {
                         HttpServletResponse response) {
         boolean authenticated = userService.authenticateUser(email, password);
         if (authenticated) {
-            // Sätt en cookie
             Cookie cookie = new Cookie("userEmail", email);
             cookie.setPath("/");
             cookie.setMaxAge(24 * 60 * 60); // 1 dag
             response.addCookie(cookie);
             return "redirect:/users/home";
         } else {
-            return "login"; // Du kan lägga till felmeddelanden här också
+            return "login";
         }
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate(); // Tar bort användardata
+        return "redirect:/login";
     }
 
     @GetMapping("/home")

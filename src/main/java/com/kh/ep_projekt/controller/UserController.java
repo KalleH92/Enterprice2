@@ -26,14 +26,5 @@ public class UserController {
         }
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String email,
-                                   @RequestParam String password) {
-        boolean authenticated = userService.authenticateUser(email, password);
-        if (authenticated) {
-            return ResponseEntity.ok("Login succesful");
-        } else {
-            return ResponseEntity.status(401).body("Invalid credentials");
-        }
-    }
+
 }
