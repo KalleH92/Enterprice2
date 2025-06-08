@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import com.kh.ep_projekt.model.User;
 
+import java.security.Principal;
+
 
 @Controller
 @RequestMapping("/users")
@@ -21,6 +23,11 @@ public class UserPageController {
     @Autowired
     private UserService userService;
 
+
+    @GetMapping("/")
+    public String redirectToLogin() {
+        return "redirect:/users/login";
+    }
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("user", new User());
@@ -56,18 +63,21 @@ public class UserPageController {
     }
 
     @GetMapping("/home")
-    public String showHomePage(HttpServletRequest request, Model model) {
-        Cookie[] cookies = request.getCookies();
-        String userEmail = null;
-        if(cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("userEmail".equals(cookie.getName())) {
-                    userEmail = cookie.getValue();
-                    break;
-                }
-            }
+    public String showHomePage(Model model, Principal principal) {
+        if (principal != null) {
+            model.addAttribute("userEmail", principal.getName());
+        } else {
+            model.addAttribute("userEmail", "Okänd");
         }
-        model.addAttribute("userEmail", userEmail);
-        return "home"; // pekar på templates/home.html
+        return "home";
+    }
+
+    @PostMapping("/delete")
+    public String deleteUser(Principal principal, HttpSession session) {
+        if (principal !=null) {
+            userService.deleteUserByEmail(principal.getName());
+            session.invalidate();
+        }
+        return "redirect:/users/login";
     }
 }

@@ -42,4 +42,8 @@ public class UserService {
         }).orElse(false);
     }
 
+    public void deleteUserByEmail(String email) {
+        userRepository.findByEmail(email).ifPresent(userRepository::delete);
+    }
+
 }
