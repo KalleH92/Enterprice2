@@ -5,10 +5,13 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
+import com.kh.ep_projekt.model.User;
 
 
 @Controller
@@ -19,7 +22,8 @@ public class UserPageController {
     private UserService userService;
 
     @GetMapping("/register")
-    public String showRegisterForm() {
+    public String showRegisterForm(Model model) {
+        model.addAttribute("user", new User());
         return "register"; // pekar på templates/register.html
     }
 
@@ -29,14 +33,17 @@ public class UserPageController {
     }
 
     @PostMapping("/register-form")
-    public String register(@RequestParam String name,
-                           @RequestParam String email,
-                           @RequestParam String password,
-                           HttpServletResponse response) {
+    public String register(@Valid @ModelAttribute("user") User user,
+                           BindingResult result,
+                           Model model) {
+        if (result.hasErrors()) {
+            return "register";
+        }
         try {
-            userService.registerUser(name, email, password);
+            userService.registerUser(user.getName(), user.getEmail(), user.getPasswordHash());
             return "redirect:/users/login";
         } catch (RuntimeException e) {
+            model.addAttribute("errorMessage", e.getMessage());
             return "register"; // Du kan lägga till felmeddelanden här senare
         }
     }

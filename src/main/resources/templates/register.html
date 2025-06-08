@@ -6,12 +6,27 @@
 </head>
 <body>
 <h2>Registrera</h2>
-<form action="#" th:action="@{/users/register}" method="post">
-    Namn: <input type="text" name="name" required><br>
-    E-post: <input type="email" name="email" required><br>
-    Lösenord: <input type="password" name="password" required><br>
+<form action="#" th:action="@{/users/register-form}" th:object="${user}" method="post">
+    <div>
+    Namn: <input type="text" th:field="*{name}"/>
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+    </div>
+
+    <div>
+    E-post: <input type="email" th:field="*{email}"/>
+    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+    </div>
+
+    <div>
+    Lösenord: <input type="password" th:field="*{passwordHash}"/>
+    <div th:if="${#fields.hasErrors('passwordHash')}" th:errors="*{passwordHash}"></div>
+    </div>
+
     <button type="submit">Registrera</button>
 </form>
-<a href="/login">Redan användare? Logga in</a>
+<div th:if="${errorMessage}" th:text="${errorMessage}" style="color: red"></div>
+
+<a href="/users/login">Redan användare? Logga in</a>
+
 </body>
 </html>
