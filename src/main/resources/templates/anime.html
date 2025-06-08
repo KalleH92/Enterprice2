@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Anime Info</title>
+</head>
+<body>
+<h2>Anime Information</h2>
+
+<div th:if="${anime != null}">
+    <p><strong>ID:</strong> <span th:text="${anime.data.mal_id}"></span></p>
+    <p><strong>Titel:</strong> <span th:text="${anime.data.title}"></span></p>
+    <p><strong>Beskrivning:</strong> <span th:text="${anime.data.synopsis}"></span></p>
+</div>
+
+<div th:if="${anime == null}">
+    <p>Ingen anime hittades.</p>
+</div>
+
+<form th:action="@{/anime/search}" method="get">
+    <input type="text" name="id" placeholder="Ange anime-id">
+    <button type="submit">Sök</button>
+</form>
+
+</body>
+</html>
