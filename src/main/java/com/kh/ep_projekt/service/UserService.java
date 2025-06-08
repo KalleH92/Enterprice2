@@ -16,6 +16,11 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
     public User registerUser(String name, String email, String password) {
         if (userRepository.existsByEmail(email)) {
             throw new RuntimeException("Email already registered");
