@@ -1,0 +1,17 @@
+<!-- templates/register.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registrera användare</title>
+</head>
+<body>
+<h2>Registrera</h2>
+<form action="#" th:action="@{/users/register}" method="post">
+    Namn: <input type="text" name="name" required><br>
+    E-post: <input type="email" name="email" required><br>
+    Lösenord: <input type="password" name="password" required><br>
+    <button type="submit">Registrera</button>
+</form>
+<a href="/login">Redan användare? Logga in</a>
+</body>
+</html>
