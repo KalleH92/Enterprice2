@@ -28,8 +28,13 @@ public class UserService {
     }
 
     public boolean authenticateUser(String email, String password) {
-        return userRepository.findByEmail(email)
-                .map(user -> passwordEncoder.matches(password, user.getPasswordHash()))
-                .orElse(false);
+        return userRepository.findByEmail(email).map(user -> {
+            System.out.println("Inmatat lösenord: " + password);
+            System.out.println("Hash i databasen: " + user.getPasswordHash());
+            boolean match = passwordEncoder.matches(password, user.getPasswordHash());
+            System.out.println("Matchning lyckades: " + match);
+            return match;
+        }).orElse(false);
     }
+
 }

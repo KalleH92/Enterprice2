@@ -6,9 +6,9 @@
 </head>
 <body>
 <h2>Välkommen!</h2>
-<p th:text="'Du är inloggad som: ' + ${#httpServletRequest.getCookie('userEmail')?.value}"></p>
+<p th:text="'Du är inloggad som: ' + ${userEmail}"></p>
 
-<form action="/logout" method="post">
+<form action="/users/logout" method="post">
     <button type="submit">Logga ut</button>
 </form>
 </body>

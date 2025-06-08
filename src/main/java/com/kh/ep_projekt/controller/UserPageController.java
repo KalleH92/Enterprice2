@@ -2,11 +2,13 @@ package com.kh.ep_projekt.controller;
 
 import com.kh.ep_projekt.service.UserService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
 
 
 @Controller
@@ -39,21 +41,6 @@ public class UserPageController {
         }
     }
 
-    @PostMapping("/login")
-    public String login(@RequestParam String email,
-                        @RequestParam String password,
-                        HttpServletResponse response) {
-        boolean authenticated = userService.authenticateUser(email, password);
-        if (authenticated) {
-            Cookie cookie = new Cookie("userEmail", email);
-            cookie.setPath("/");
-            cookie.setMaxAge(24 * 60 * 60); // 1 dag
-            response.addCookie(cookie);
-            return "redirect:/users/home";
-        } else {
-            return "login";
-        }
-    }
 
     @PostMapping("/logout")
     public String logout(HttpSession session) {
@@ -62,7 +49,18 @@ public class UserPageController {
     }
 
     @GetMapping("/home")
-    public String showHomePage() {
+    public String showHomePage(HttpServletRequest request, Model model) {
+        Cookie[] cookies = request.getCookies();
+        String userEmail = null;
+        if(cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("userEmail".equals(cookie.getName())) {
+                    userEmail = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        model.addAttribute("userEmail", userEmail);
         return "home"; // pekar på templates/home.html
     }
 }

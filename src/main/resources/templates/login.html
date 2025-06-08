@@ -6,11 +6,23 @@
 </head>
 <body>
 <h2>Logga in</h2>
-<form action="#" th:action="@{/users/login}" method="post">
-    E-post: <input type="email" name="email" required><br>
-    Lösenord: <input type="password" name="password" required><br>
+<form th:action="@{/users/login-form}" method="post">
+    <label>
+        E-post:
+        <input type="email" name="username" required>
+    </label>
+    <br>
+    <label>
+        Lösenord:
+        <input type="password" name="password" required>
+    </label>
+    <br>
     <button type="submit">Logga in</button>
 </form>
-<a href="/register">Skapa konto</a>
+
+<p th:if="${param.error}">Fel e-post eller lösenord.</p>
+<p th:if="${param.logout}">Du har loggats ut.</p>
+
+<a th:href="@{/users/register}">Skapa konto</a>
 </body>
 </html>
